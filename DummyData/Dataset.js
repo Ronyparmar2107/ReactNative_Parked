@@ -31,6 +31,26 @@ export const Data = [{
             Name: 'Nupur Patel',
         },
     ],
+    owners: [
+        {
+            id: 6666666666,
+            password: 'test1234',
+            Name: 'Rony Parmar',
+            placesId: [1, 2]
+        },
+        {
+            id: 7777777777,
+            password: 'test1234',
+            Name: 'Anish Patel',
+            placesId: [3]
+        },
+        {
+            id: 8888888888,
+            password: 'dhruv1234',
+            Name: 'Dhruv Patel',
+            placesId: [4, 5]
+        }
+    ],
 
     Places: [
         {
@@ -250,6 +270,7 @@ export const Data = [{
                             id: 'D7',
                             isAvailable: true
                         },
+
                         {
                             id: 'D8',
                             isAvailable: false

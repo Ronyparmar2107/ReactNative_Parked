@@ -3,9 +3,13 @@ import { View, Text, StyleSheet, Dimensions, Image, FlatList } from 'react-nativ
 import { LinearGradient } from 'expo-linear-gradient';
 
 import ParkingArea from '../Components/ParkingArea';
-import Data from '../DummyData/Dataset'
+import { useSelector } from 'react-redux';
 
 const PlaceScreen = (props) => {
+
+    const placesData = useSelector(state => state.owner.places)
+
+
     const Navigation = (id) => {
         props.navigation.navigate({
             routeName: 'Parking', params: {
@@ -14,8 +18,7 @@ const PlaceScreen = (props) => {
         })
     }
     const placeId = props.navigation.getParam('id')
-    const places = Data.map(ele => ele.Places)
-    const place = places[0].find(ele => ele.id === placeId)
+    const place = placesData.find(ele => ele.id === placeId)
     return (
         <LinearGradient
             colors={['transparent', "#FF84FF", "#C13DDC",]}
@@ -54,6 +57,10 @@ const PlaceScreen = (props) => {
         </LinearGradient>
     )
 }
+
+PlaceScreen['navigationOptions'] = screenProps => ({
+    title: 'Mall',
+})
 const Style = StyleSheet.create({
     Screen: {
         height: '100%'

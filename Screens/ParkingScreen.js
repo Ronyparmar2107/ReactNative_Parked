@@ -3,12 +3,12 @@ import { View, Text, StyleSheet, Dimensions, FlatList, TouchableOpacity, Alert }
 import { LinearGradient } from 'expo-linear-gradient';
 
 import ParkingSpot from '../Components/ParkingSpot';
-import Data from '../DummyData/Dataset'
+import { useSelector } from 'react-redux';
 
 const ParkingScreen = (props) => {
+    const placesData = useSelector(state => state.owner.places)
     const parkingAreaId = props.navigation.getParam('id')
-    const places = Data.map(ele => ele.Places)
-    const place = places[0].find(ele => ele.id === parseInt(parkingAreaId.toString().slice(0, 1)))
+    const place = placesData.find(ele => ele.id === parseInt(parkingAreaId.toString().slice(0, 1)))
     const parkingArea = place.ParkingAreas.find(ele => ele.id === parkingAreaId)
     const parking = parkingArea.parkings
 
@@ -55,6 +55,9 @@ const ParkingScreen = (props) => {
         </LinearGradient>
     )
 }
+ParkingScreen['navigationOptions'] = screenProps => ({
+    title: 'Parkings',
+})
 const Style = StyleSheet.create({
     Screen: {
         height: '100%'

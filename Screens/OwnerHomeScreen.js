@@ -1,24 +1,36 @@
 import React from 'react'
-import { View, Text, StyleSheet, TextInput, Dimensions, Image, FlatList } from 'react-native'
+import { View, Text, StyleSheet, Dimensions, Image, FlatList, Button } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient';
 
-import Place from '../Components/Place';
 import { useSelector } from 'react-redux';
+import Place from '../Components/Place';
 import CustomeBtn from '../Components/CustomeBtn';
 
+const OwnerHomeScreen = (props) => {
 
+    const logOutHandler = () => {
+        props.navigation.replace('login')
+    }
 
-const UserHomePage = (props) => {
-
-    const userData = useSelector(state => state.user)
+    const ownerData = useSelector(state => state.owner.owners)
     const placesData = useSelector(state => state.owner.places)
 
-    let userId = props.navigation.getParam('userid')
-    let user = userData.users.find(ele => ele.id.toString() === userId.toString())
+    let ownerId = props.navigation.getParam('userid')
+    let owner = ownerData.find(ele => ele.id.toString() === ownerId.toString())
+    let placesOwned = []
+
+    owner.placesId.map(ele => {
+        placesData.find(data => {
+            if (data.id.toString() === ele.toString()) {
+                placesOwned.push(data)
+            }
+        })
+    })
+
 
     const Navigation = (placeid) => {
         props.navigation.navigate({
-            routeName: 'Place', params: {
+            routeName: 'AddPlace', params: {
                 id: placeid
             }
         })
@@ -45,20 +57,19 @@ const UserHomePage = (props) => {
                 </View>
                 <View>
                     <Text>{greetings}</Text>
-                    <Text style={Style.UserName}>{user.Name}</Text>
+                    <Text style={Style.UserName}>{owner.Name}</Text>
                 </View>
 
             </View>
 
             <View style={Style.placesSectionContainer}>
-                <TextInput placeholder='Search Space' style={Style.Sreach} />
                 <View style={Style.placesContainer}>
-                    <Text>Nearby Places</Text>
+                    <Text>Your Places</Text>
                     <FlatList
                         contentContainerStyle={{ alignItems: 'center', }}
                         style={Style.PlaceList}
-                        data={placesData}
-                        key={placesData.id}
+                        data={placesOwned}
+                        key={placesOwned.id}
                         renderItem={(item) => <Place
                             Name={item.item.Name}
                             id={item.item.id}
@@ -72,10 +83,13 @@ const UserHomePage = (props) => {
     )
 }
 
-UserHomePage['navigationOptions'] = navigation => ({
+OwnerHomeScreen.navigationOptions = navigation => ({
     title: 'Welcome',
     headerRight: () => <CustomeBtn style={{ backgroundColor: 'white', color: '#FF84FF' }} onClick={() => navigation.navigation.replace('Login')} >Log Out</CustomeBtn>
+
 })
+
+
 const Style = StyleSheet.create({
     Screen: {
         height: '100%'
@@ -114,14 +128,7 @@ const Style = StyleSheet.create({
         padding: 20
 
     },
-    Sreach: {
-        height: 40,
-        width: '90%',
-        borderWidth: 1,
-        borderRadius: 20,
-        padding: 10,
-        fontSize: 12
-    },
+
     placesContainer: {
         width: '100%',
         marginTop: 10
@@ -132,4 +139,4 @@ const Style = StyleSheet.create({
     },
 })
 
-export default UserHomePage
+export default OwnerHomeScreen
