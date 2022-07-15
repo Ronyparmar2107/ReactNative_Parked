@@ -1,9 +1,10 @@
-import React from 'react'
-import { View, Text, StyleSheet, Dimensions, FlatList, TouchableOpacity, Alert } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { View, Text, StyleSheet, Dimensions, FlatList, Alert, DevSettings } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient';
 
 import ParkingSpot from '../Components/ParkingSpot';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { updateParking } from '../Store/actions/owner';
 
 const ParkingScreen = (props) => {
     const placesData = useSelector(state => state.owner.places)
@@ -11,6 +12,14 @@ const ParkingScreen = (props) => {
     const place = placesData.find(ele => ele.id === parseInt(parkingAreaId.toString().slice(0, 1)))
     const parkingArea = place.ParkingAreas.find(ele => ele.id === parkingAreaId)
     const parking = parkingArea.parkings
+
+    const dispatch = useDispatch()
+    const [temp, settemp] = useState(parking)
+
+    useEffect(() => {
+        settemp(parking)
+    }, [placesData])
+
 
     const Park = (id) => {
         let clickedParking = parking.find(e => e.id === id)
@@ -21,7 +30,12 @@ const ParkingScreen = (props) => {
                     onPress: () => console.log("Cancel Pressed"),
                     style: "cancel"
                 },
-                { text: "OK", onPress: () => console.log("OK Pressed") }
+                {
+                    text: "OK", onPress: () => {
+                        dispatch(updateParking(clickedParking.id, place.id, parkingArea.id))
+
+                    }
+                }
             ])
         }
         else {
@@ -45,8 +59,8 @@ const ParkingScreen = (props) => {
 
             <View style={Style.parkingSectionContainer} >
                 <FlatList
-                    key={parking.id}
-                    data={parking}
+                    key={temp.id}
+                    data={temp}
                     style={Style.scrollComponent}
                     alignItems={'center'}
                     renderItem={item => <ParkingSpot id={item.item.id} Park={Park} isAvailable={item.item.isAvailable} />} />

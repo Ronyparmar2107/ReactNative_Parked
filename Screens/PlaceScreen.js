@@ -19,6 +19,8 @@ const PlaceScreen = (props) => {
     }
     const placeId = props.navigation.getParam('id')
     const place = placesData.find(ele => ele.id === placeId)
+
+    console.log(placesData)
     return (
         <LinearGradient
             colors={['transparent', "#FF84FF", "#C13DDC",]}

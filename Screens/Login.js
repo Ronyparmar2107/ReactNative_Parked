@@ -24,7 +24,7 @@ const Login = (props) => {
 
     const [userId, setuserId] = useState('')
     const [userPassword, setuserPassword] = useState('')
-    const [selectedUser, setSelectedUser] = useState();
+    const [selectedUser, setSelectedUser] = useState('user');
 
     const Navigator = (page, id) => {
         props.navigation.replace({
@@ -34,11 +34,11 @@ const Login = (props) => {
         })
     }
     const loginHandler = () => {
-        console.log(OwnerData.owners)
         if (selectedUser === 'user' && userId.length === 10) {
             let checkUser = UserData.users.find(ele => ele.id.toString() === userId.toString())
             if (checkUser && userPassword.length >= 1 && checkUser.password.toString() === userPassword) {
                 Navigator('Home', checkUser.id)
+
                 setuserId('')
                 setuserPassword('')
             }

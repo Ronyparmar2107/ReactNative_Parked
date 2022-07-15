@@ -8,10 +8,6 @@ import CustomeBtn from '../Components/CustomeBtn';
 
 const OwnerHomeScreen = (props) => {
 
-    const logOutHandler = () => {
-        props.navigation.replace('login')
-    }
-
     const ownerData = useSelector(state => state.owner.owners)
     const placesData = useSelector(state => state.owner.places)
 
@@ -27,10 +23,16 @@ const OwnerHomeScreen = (props) => {
         })
     })
 
-
-    const Navigation = (placeid) => {
+    const Navigation = (ownerId) => {
         props.navigation.navigate({
             routeName: 'AddPlace', params: {
+                id: ownerId
+            }
+        })
+    }
+    const PlaceNavigateHandler = (placeid) => {
+        props.navigation.navigate({
+            routeName: 'Place', params: {
                 id: placeid
             }
         })
@@ -74,8 +76,10 @@ const OwnerHomeScreen = (props) => {
                             Name={item.item.Name}
                             id={item.item.id}
                             Address={item.item.Address}
-                            Navigate={Navigation}
+                            Navigate={PlaceNavigateHandler}
                             img={item.item.img} />} />
+                    {placesOwned.length <= 0 && <View><Text>You have not registered your Malls, Use Add Mall to register.</Text></View>}
+                    <CustomeBtn onClick={() => Navigation(ownerId)} style={{ marginTop: placesOwned.length <= 0 ? 5 : 0 }}>Add Mall</CustomeBtn>
                 </View>
             </View>
 
