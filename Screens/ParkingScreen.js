@@ -9,9 +9,11 @@ import { updateParking } from '../Store/actions/owner';
 const ParkingScreen = (props) => {
     const placesData = useSelector(state => state.owner.places)
     const parkingAreaId = props.navigation.getParam('id')
+    const paramPlace = props.navigation.getParam('place')
     const place = placesData.find(ele => ele.id === parseInt(parkingAreaId.toString().slice(0, 1)))
     const parkingArea = place.ParkingAreas.find(ele => ele.id === parkingAreaId)
     const parking = parkingArea.parkings
+    console.log(paramPlace)
 
     const dispatch = useDispatch()
     const [temp, settemp] = useState(parking)

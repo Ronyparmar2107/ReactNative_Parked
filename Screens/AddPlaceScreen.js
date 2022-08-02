@@ -107,7 +107,8 @@ const AddPlaceScreen = (props) => {
 
     const addPlaceHandler = () => {
 
-        userdispatch(addPlace(state.initialValues))
+        userdispatch(addPlace(state.initialValues, ownerId))
+        Alert.alert('Registration successfull', 'Your mall was added successfully', [{ type: 'OK', onPress: () => { props.navigation.pop() } }])
 
     }
 

@@ -2,6 +2,7 @@ import React, { useRef, useReducer } from 'react'
 import { View, Text, TouchableWithoutFeedback, StyleSheet, TextInput, Keyboard, Dimensions, KeyboardAvoidingView, Alert } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient';
 import { Picker } from '@react-native-picker/picker';
+
 import CustomeBtn from '../Components/CustomeBtn';
 import { createUser } from '../Store/actions/user';
 import { createOwner } from '../Store/actions/owner';
@@ -9,7 +10,7 @@ import { useDispatch } from 'react-redux';
 
 const CHANGE = 'CHANGE'
 
-let initialState = {
+let initialState = {  //The state holding all values
     initialValues: {
         name: '',
         contact: '',
@@ -21,7 +22,7 @@ let initialState = {
         name: true,
         contact: true,
         email: true,
-        password: true,
+        password: true
     }
 }
 
@@ -45,15 +46,9 @@ const FormReducer = (state, action) => {
 const SignUp = (props) => {
     const userdispatch = useDispatch()
     let [state, dispatch] = useReducer(FormReducer, initialState);
-    const pickerRef = useRef();
 
-    const AccountCreated = () => {
-        Alert.alert(state.initialValues.type + ' account created', state.initialValues.name + ', your account was created. Now login with your credentials', [{
-            text: "LogIn",
-            onPress: () => props.navigation.replace('Login')
-        }])
-    }
 
+    const pickerRef = useRef();  //function for closing and oping of the select
     function open() {
         pickerRef.current.focus();
     }
@@ -62,12 +57,21 @@ const SignUp = (props) => {
         pickerRef.current.blur();
     }
 
+    //storing values on change
     const nameHandler = (text, identifier) => {
+        if (identifier === 'name') {
+            let nameRegex = `/^[a-z ,.'-]+$/`
+            if (nameRegex.test(text)) {
+                state.initialValidations = false
+            }
+        }
         dispatch({ type: CHANGE, input: identifier, value: text })
     }
 
+    // Storing in Redux Store
     const signUpHandler = () => {
         if (state.initialValues.type === 'user') {
+
             userdispatch(createUser(state.initialValues.name, state.initialValues.contact, state.initialValues.password))
             AccountCreated()
         }
@@ -75,8 +79,14 @@ const SignUp = (props) => {
             userdispatch(createOwner(state.initialValues.name, state.initialValues.contact, state.initialValues.password))
             AccountCreated()
         }
+    }
 
-
+    //promting account created
+    const AccountCreated = () => {
+        Alert.alert(state.initialValues.type + ' account created', state.initialValues.name + ', your account was created. Now login with your credentials', [{
+            text: "LogIn",
+            onPress: () => props.navigation.replace('Login')
+        }])
     }
 
 

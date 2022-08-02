@@ -8,19 +8,21 @@ import { useSelector } from 'react-redux';
 const PlaceScreen = (props) => {
 
     const placesData = useSelector(state => state.owner.places)
-
+    const placeId = props.navigation.getParam('id')
+    const place = placesData.find(ele => ele.id === placeId)
 
     const Navigation = (id) => {
         props.navigation.navigate({
             routeName: 'Parking', params: {
-                id: id
+                id: id,
+                place: place
             }
         })
     }
-    const placeId = props.navigation.getParam('id')
-    const place = placesData.find(ele => ele.id === placeId)
 
-    console.log(placesData)
+
+    console.log(place)
+
     return (
         <LinearGradient
             colors={['transparent', "#FF84FF", "#C13DDC",]}

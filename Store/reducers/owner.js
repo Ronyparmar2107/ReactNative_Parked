@@ -24,8 +24,9 @@ const OwnerReducer = (state = initialState, action) => {
                 owners: [...NewState]
             }
         case UPDATE_PARKING:
-            let Currentplace = initialState.places.find(ele => ele.id.toString() === action.placeId.toString())
-            let CurrentplaceIndex = initialState.places.findIndex((ele => ele.id.toString() === action.placeId.toString()))
+            let Currentplace = state.places.find(ele => ele.id.toString() === action.placeId.toString())
+            // let Currentplace = state.places.find(ele => console.log(ele.id, action.placeId))
+            let CurrentplaceIndex = state.places.findIndex((ele => ele.id.toString() === action.placeId.toString()))
             let CurrentAreaIndex = Currentplace.ParkingAreas.findIndex((ele => ele.id.toString() === action.areaId.toString()))
             let CurrentArea = Currentplace.ParkingAreas.find(ele => ele.id.toString() === action.areaId.toString())
             let CurrentParking = CurrentArea.parkings.findIndex((ele => ele.id.toString() === action.id.toString()))
@@ -33,11 +34,11 @@ const OwnerReducer = (state = initialState, action) => {
 
             CurrentArea.parkings[CurrentParking].isAvailable = false
             Currentplace.ParkingAreas[CurrentAreaIndex] = CurrentArea
-            initialState.places[CurrentplaceIndex] = Currentplace
+            state.places[CurrentplaceIndex] = Currentplace
 
             UpdatedPlaces = {
-                ...initialState,
-                places: initialState.places
+                ...state,
+                places: state.places
             }
 
             return UpdatedPlaces
@@ -49,7 +50,7 @@ const OwnerReducer = (state = initialState, action) => {
             for (let index = 0; index < recievedData.pakringAreas.length; index++) {
                 let tempParking = {
                     id: '',
-                    name: '',
+                    Name: '',
                     type: '',
                     size: '',
                     parkings: []
@@ -63,8 +64,8 @@ const OwnerReducer = (state = initialState, action) => {
                 }
                 let NewtempParking = {
                     ...tempParking,
-                    id: initialState.places.length + 1 + `${recievedData.pakringAreas[index].name.charCodeAt(0) - 64}`,
-                    name: recievedData.pakringAreas[index].name,
+                    id: state.places.length + 1 + `${recievedData.pakringAreas[index].name.charCodeAt(0) - 64}`,
+                    Name: recievedData.pakringAreas[index].name,
                     type: recievedData.pakringAreas[index].parkingtype,
                     size: recievedData.pakringAreas[index].value
                 }
@@ -72,7 +73,7 @@ const OwnerReducer = (state = initialState, action) => {
             }
 
             let newPlace = {
-                id: initialState.places.length + 1,
+                id: state.places.length + 1,
                 Name: recievedData.name,
                 Address: recievedData.address,
                 img: recievedData.imgUrl,
@@ -81,13 +82,15 @@ const OwnerReducer = (state = initialState, action) => {
                     ...allParkings
                 ]
             }
-            console.log(newPlace)
 
-            let AddedPlaces = {
-                ...initialState,
-                places: initialState.places.concat(newPlace)
-            }
-            return AddedPlaces
+            let CurrentOwner = state.owners.find(ele => ele.id.toString() === action.ownerId.toString())
+            let CurrentOwnerIndex = state.owners.indexOf(ele => ele.id.toString() === action.ownerId.toString())
+            CurrentOwner.placesId.push(newPlace.id)
+
+            state.owners[CurrentOwnerIndex]
+            state.places.push(newPlace)
+
+            return { ...state, places: state.places }
 
     }
 
