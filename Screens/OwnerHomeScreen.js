@@ -15,7 +15,7 @@ const OwnerHomeScreen = (props) => {
     let owner = ownerData.find(ele => ele.id.toString() === ownerId.toString())
     let placesOwned = []
 
-    owner.placesId.map(ele => {
+    owner.placesId?.map(ele => {
         placesData.find(data => {
             if (data.id.toString() === ele.toString()) {
                 placesOwned.push(data)
@@ -78,7 +78,7 @@ const OwnerHomeScreen = (props) => {
                             Address={item.item.Address}
                             Navigate={PlaceNavigateHandler}
                             img={item.item.img} />} />
-                    {placesOwned.length <= 0 && <View><Text>You have not registered your Malls, Use Add Mall to register.</Text></View>}
+                    {placesOwned.length === 0 && <View><Text style={{ paddingBottom: 10 }}>You have not registered your Malls, Use Add Mall to register.</Text></View>}
                     <CustomeBtn onClick={() => Navigation(ownerId)} style={{ marginTop: placesOwned.length <= 0 ? 5 : 0 }}>Add Mall</CustomeBtn>
                 </View>
             </View>

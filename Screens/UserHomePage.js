@@ -1,21 +1,35 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { View, Text, StyleSheet, TextInput, Dimensions, Image, FlatList } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient';
 
 import Place from '../Components/Place';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import CustomeBtn from '../Components/CustomeBtn';
+import { getAllPlaces } from '../Store/actions/owner';
 
 
 
 const UserHomePage = (props) => {
 
-    const userData = useSelector(state => state.user)
+
+    const userData = useSelector(state => state.user.users)
     const placesData = useSelector(state => state.owner.places)
 
     let userId = props.navigation.getParam('userid')
-    let user = userData.users.find(ele => ele.id.toString() === userId.toString())
+    let user = userData.find(ele => ele.id.toString() === userId.toString())
+    let dispatch = useDispatch();
 
+    const fetchPlaces = async () => {
+        try {
+            await dispatch(getAllPlaces())
+        } catch (error) {
+            console.log(error.error)
+        }
+    }
+
+    useEffect(() => {
+        fetchPlaces()
+    }, [])
     const Navigation = (placeid) => {
         props.navigation.navigate({
             routeName: 'Place', params: {

@@ -4,7 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 import ParkingSpot from '../Components/ParkingSpot';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateParking } from '../Store/actions/owner';
+import { getAllPlaces, updateParking } from '../Store/actions/owner';
 
 const ParkingScreen = (props) => {
     const placesData = useSelector(state => state.owner.places)
@@ -18,9 +18,9 @@ const ParkingScreen = (props) => {
     const dispatch = useDispatch()
     const [temp, settemp] = useState(parking)
 
-    useEffect(() => {
-        settemp(parking)
-    }, [placesData])
+    // useEffect(() => {
+    //     settemp(parking)
+    // }, [placesData])
 
 
     const Park = (id) => {
@@ -33,9 +33,10 @@ const ParkingScreen = (props) => {
                     style: "cancel"
                 },
                 {
-                    text: "OK", onPress: () => {
-                        dispatch(updateParking(clickedParking.id, place.id, parkingArea.id))
-
+                    text: "OK", onPress: async () => {
+                        await dispatch(updateParking(clickedParking.id, place.id, parkingArea.id, placesData))
+                        await dispatch(getAllPlaces)
+                        settemp(parking)
                     }
                 }
             ])

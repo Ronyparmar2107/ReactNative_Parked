@@ -51,7 +51,6 @@ export const Data = [{
             placesId: [4, 5]
         }
     ],
-
     Places: [
         {
             id: 1,
@@ -821,7 +820,6 @@ export const Data = [{
         },
 
     ]
-
 }]
 
 export default Data 

@@ -1,18 +1,22 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { View, Text, StyleSheet, TextInput, TouchableWithoutFeedback, Dimensions, Alert, Keyboard, TouchableOpacity } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient';
 import CustomeBtn from '../Components/CustomeBtn';
 import { Picker } from '@react-native-picker/picker';
 
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { getAllUser } from '../Store/actions/user';
+import { getAllOwners } from '../Store/actions/owner';
 
 
 
 const Login = (props) => {
 
-    const UserData = useSelector(state => state.user)
+    const UserData = useSelector(state => state.user.users)
+    // let TempUsers = useSelector(state => state.user.tempusers)
     const OwnerData = useSelector(state => state.owner)
     const pickerRef = useRef();
+    const dispatch = useDispatch();
 
     function open() {
         pickerRef.current.focus();
@@ -35,7 +39,7 @@ const Login = (props) => {
     }
     const loginHandler = () => {
         if (selectedUser === 'user' && userId.length === 10) {
-            let checkUser = UserData.users.find(ele => ele.id.toString() === userId.toString())
+            let checkUser = UserData.find(ele => ele.id.toString() === userId.toString())
             if (checkUser && userPassword.length >= 1 && checkUser.password.toString() === userPassword) {
                 Navigator('Home', checkUser.id)
 
@@ -53,13 +57,16 @@ const Login = (props) => {
         }
         else if (selectedUser === 'owner' && userId.length === 10) {
             let checkUser = OwnerData.owners.find(ele => ele.id.toString() === userId.toString())
+            console.log(OwnerData.owners)
+            console.log(userId)
+            console.log(userPassword)
             if (checkUser && userPassword.length >= 1 && checkUser.password === userPassword) {
                 Navigator('OwnerHome', checkUser.id)
                 setuserId('')
                 setuserPassword('')
             }
             else {
-                Alert.alert('User Not Found!', 'Please Check your phone number and password and then try again!', [
+                Alert.alert('Something is Wrong!', 'Please Check your phone number and password and then try again!', [
                     {
                         text: "Cancel",
                         style: "cancel"
@@ -85,6 +92,20 @@ const Login = (props) => {
     const SetPassword = (e) => {
         setuserPassword(e)
     }
+
+    const FetchUser = async () => {
+        try {
+            await dispatch(getAllUser())
+            await dispatch(getAllOwners())
+        } catch (error) {
+            console.log("Login error" + error)
+        }
+    }
+
+    useEffect(() => {
+        FetchUser()
+    }, [])
+
 
     return (
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>

@@ -6,7 +6,7 @@ import { Picker } from '@react-native-picker/picker';
 import CustomeBtn from '../Components/CustomeBtn';
 import { createUser } from '../Store/actions/user';
 import { createOwner } from '../Store/actions/owner';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 const CHANGE = 'CHANGE'
 
@@ -45,6 +45,8 @@ const FormReducer = (state, action) => {
 
 const SignUp = (props) => {
     const userdispatch = useDispatch()
+    const UserData = useSelector(state => state.user.users)
+    const Owners = useSelector(state => state.owner.owners)
     let [state, dispatch] = useReducer(FormReducer, initialState);
 
 
@@ -69,15 +71,22 @@ const SignUp = (props) => {
     }
 
     // Storing in Redux Store
-    const signUpHandler = () => {
+    const signUpHandler = async () => {
         if (state.initialValues.type === 'user') {
-
-            userdispatch(createUser(state.initialValues.name, state.initialValues.contact, state.initialValues.password))
-            AccountCreated()
+            try {
+                await userdispatch(createUser(state.initialValues.name, state.initialValues.contact, state.initialValues.password, UserData))
+                AccountCreated()
+            } catch (error) {
+                console.log(error)
+            }
         }
         else {
-            userdispatch(createOwner(state.initialValues.name, state.initialValues.contact, state.initialValues.password))
-            AccountCreated()
+            try {
+                await userdispatch(createOwner(state.initialValues.name, state.initialValues.contact, state.initialValues.password, Owners))
+                AccountCreated()
+            } catch (error) {
+                console.log(error)
+            }
         }
     }
 

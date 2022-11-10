@@ -5,7 +5,7 @@ import { Picker } from '@react-native-picker/picker';
 import { useDispatch, useSelector } from 'react-redux';
 
 import CustomeBtn from '../Components/CustomeBtn';
-import { addPlace } from '../Store/actions/owner';
+import { addPlace, updateOwner } from '../Store/actions/owner';
 
 const CHANGE = 'CHANGE';
 const UPDATE = "UPDATE";
@@ -57,6 +57,7 @@ const AddPlaceScreen = (props) => {
 
 
     const ownerData = useSelector(state => state.owner.owners)
+    const places = useSelector(state => state.owner.places)
     const ownerId = props.navigation.getParam('id')
     let owner = ownerData.find(ele => ele.id.toString() === ownerId.toString())
 
@@ -105,10 +106,15 @@ const AddPlaceScreen = (props) => {
         dispatch({ type: UPDATE_PARKING_TYPE, index: index, value: value })
     }
 
-    const addPlaceHandler = () => {
+    const addPlaceHandler = async () => {
 
-        userdispatch(addPlace(state.initialValues, ownerId))
-        Alert.alert('Registration successfull', 'Your mall was added successfully', [{ type: 'OK', onPress: () => { props.navigation.pop() } }])
+        try {
+            await userdispatch(addPlace(state.initialValues, ownerId, places))
+            await userdispatch(updateOwner(ownerId, places, ownerData))
+            Alert.alert('Registration successfull', 'Your mall was added successfully', [{ type: 'OK', onPress: () => { props.navigation.pop() } }])
+        } catch (error) {
+            console.log(error.error)
+        }
 
     }
 
